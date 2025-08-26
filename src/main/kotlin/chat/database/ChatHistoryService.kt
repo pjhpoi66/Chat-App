@@ -17,14 +17,15 @@ class ChatHistoryService {
     }
 
     // 최근 메시지를 가져오는 함수
-    fun getRecentMessages(limit: Int = 20): List<String> {
+    fun getRecentMessages(limit: Int = 20): List<Pair<String, LocalDateTime>> {
         return transaction {
             ChatMessages
                 .selectAll()
                 .orderBy(ChatMessages.timestamp, SortOrder.DESC)
                 .limit(limit)
-                .map { it[ChatMessages.content] }
+                .map { it[ChatMessages.content] to it[ChatMessages.timestamp] }
                 .reversed() // 시간 순서대로 다시 뒤집음
         }
     }
+
 }

@@ -41,11 +41,12 @@ private suspend fun handleClient(socket: Socket) {
     try {
         val recentMessages = chatHistoryService.getRecentMessages()
         writer.println("--- 이전 대화 내용 ---")
-        recentMessages.forEach { writer.println(it) }
+        recentMessages.forEach { writer.println("[${it.second}] ${it.first}") }
         writer.println("--------------------")
     } catch (e: Exception) {
         println("이전 대화 전송 실패: ${e.message}")
     }
+
 
     val writerJob = CoroutineScope(Dispatchers.IO).launch {
         messageFlow.asSharedFlow().collectLatest { msg ->
